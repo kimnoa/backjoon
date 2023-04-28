@@ -1,48 +1,152 @@
-#include <iostream>
+#include "DS.h"
 
-using namespace std;
+class BinarySearchTree {
+public:
+	BinarySearchTree() :root(nullptr) {};
+	~BinarySearchTree() {};
 
-//template <typename T>
+	void addNode(int value);
+	bool searchValue(int value);
+	void removeNode(int value);
+	void show();
+private:
+	Node* root;
+	Node* tail;
 
-int main(void) {
-
-	int n_of_nodes = 0; //노드 개수
-
-	cin >> n_of_nodes;
-	
-	int* node_list = new int[n_of_nodes-1]; //2~마지막 노드까지 생성
-
-	for (int i = 0; i < n_of_nodes - 1; i++) //전체 배열 사이즈가 n -1 임
+	void inOrder(Node* current)
 	{
-		node_list[i] = 0; //초기화
+		if (current != nullptr)
+		{
+			inOrder(current->left);
+			std::cout << current->value << std::endl;
+			inOrder(current->right);
+		}
 	}
 
-	int node1 = 0, node2 = 0; //연결된 두 노드
+	Node* searchMaxNode(Node* node)
+	{
+		if (node == NULL)
+		{
+			return NULL;
+		}
+		while (node->right != NULL)
+		{
+			node = node->right;
+		}
+		return node;
+	}
+	Node* removeSequence(Node* node, int _value);
+};
 
-	int index = n_of_nodes; //while문 조건
+void BinarySearchTree::addNode(int value)
+{
+	Node* node = new Node();
+	Node* tmpRoot = nullptr;
 
-	while (index > 1) {
-
-		cin >> node1 >> node2; //노드 2개 입력
-		if (node_list[max(node1, node2) - 2] == 0) {
-
-			node_list[max(node1, node2) - 2] = min(node1, node2); 
-			// 2~마지막 노드에 대하여 자식 노드의 위치에 부모 노드를 저장
-
+	node->value = value;
+	if (root == nullptr)
+	{
+		root = node;
+	}
+	else
+	{
+		Node* ptr = root;
+		while (ptr != nullptr)
+		{
+			tmpRoot = ptr;
+			if (node->value < ptr->value)
+			{
+				ptr = ptr->left;
+			}
+			else
+			{
+				ptr = ptr->right;
+			}
+		}
+		if (node->value < tmpRoot->value)
+		{
+			tmpRoot->left = node;
 		}
 		else
 		{
-			node_list[min(node1, node2) - 2] = max(node1, node2);
+			tmpRoot->right = node;
 		}
-		
-
-		index--;
 	}
-	
-	for (int i=0; i < n_of_nodes-1; i++)
+}
+
+Node* BinarySearchTree::removeSequence(Node* node, int _value)
+{
+	if (node == nullptr)
 	{
-		cout << node_list[i] << "\n";
+		return node;
 	}
+	else if (node->value > _value)
+	{
+		node->left = removeSequence(node->left, _value);
+	}
+	else if (node->value < _value)
+	{
+		node->right = removeSequence(node->right, _value);
+	}
+	else
+	{
+		Node* ptr = node;
+		if (node->right == nullptr && node->left == nullptr)
+		{
+			delete node;
+			node = nullptr;
+		}
+		else if (node->right == nullptr)
+		{
+			node = node->left;
+			delete ptr;
+		}
+		else if (node->left == nullptr)
+		{
+			node = node->right;
+			delete ptr;
+		}
+		else
+		{
+			ptr = searchMaxNode(node->left);
+			node->value = ptr->value;
+			node->left = removeSequence(node->left, ptr->value);
+		}
+	}
+	return node;
+}
 
-	return 0;
+void BinarySearchTree::removeNode(int value)
+{
+	Node* ptr = root;
+	removeSequence(ptr, value);
+}
+
+bool BinarySearchTree::searchValue(int value)
+{
+	Node* ptr = root;
+	//	Node* tmpRoot = nullptr;
+	while (ptr != nullptr)
+	{
+		if (ptr->value == value)
+		{
+			std::cout << value << "Found" << std::endl;
+			return true;
+		}
+		else if (ptr->value > value)
+		{
+			ptr = ptr->left;
+		}
+		else
+		{
+			ptr = ptr->right;
+		}
+	}
+	std::cout << value << "not Found" << std::endl;
+	return false;
+}
+
+void BinarySearchTree::show()
+{
+	inOrder(root);
 }

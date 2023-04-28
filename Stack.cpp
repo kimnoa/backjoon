@@ -1,107 +1,45 @@
-#include <iostream>
-#include <string.h>
-#include <vector>
-#include <cstring>
+#include "DS.h"
 
 using namespace std;
 
-class Stack {
-private:
-	int top_id = -1;
-	vector <int>stack_list;
 
-public:
-
-	//배열 생성
-	int* new_stack(int top_id) {
-		int* stack = new int[(top_id + 1) * sizeof(int)];
-		return stack;
-	}
-
-	void push(int x) {
-
-		//메모리 추가
-		stack_list.reserve((++top_id + 1) * sizeof(int));
-
-		//정수 할당
-		stack_list.emplace_back(x);
-
-	}
-
-	void pop() {
-		if (top_id < 0)
-			cout << -1<<endl;
-		else
-		{
-			cout << stack_list.back() << endl;
-			stack_list.pop_back(); //마지막 값 제거
-			stack_list.shrink_to_fit(); //빈 공간 제거
-			top_id--;
-		}
-	}
-
-	void size() {
-		cout << stack_list.size() << endl;
-	}
-
-	void empty() {
-		if (top_id < 0)
-			cout << 1 << endl;
-		else
-			cout << 0 << endl;
-	}
-
-	void top() {
-		if (top_id < 0)
-			cout << -1 << endl;
-		else
-			cout << stack_list.back() << endl;
-	}
-
-};
 /* *************************************************/
-
-int main(void) {
+void stack(void) {
 	//class 생성
 	Stack S;
 
 	//var 생성
-	int count = 0;
-	char cmd[20] = { 0 };
-	char* cp = cmd;
-	int x = 0;
-	int num = 0;
+	int select = 0;
 
-	//명령 횟수 입력
-	cin >> count;
-
-	for (int c = 0; c < count; c++)
+	while(1)
 	{
-		//var 입력
-		cin >> cmd;
+		cout << "push:1  pop:2  show:3  종료:4\n";
+		//명령 입력
+		cin >> select;
 
-		//명령 분류
-		if (strstr(cp, "push") != nullptr)
-		{
-			cin >> num;
-			x = num;
-			S.push(x);
-		}
-		else if (strstr(cp, "pop") != nullptr)
+		switch (select) {
+
+		case 1:
+			S.push();
+			continue;
+
+		case 2:
 			S.pop();
-		else if (strstr(cp, "size") != nullptr)
-			S.size();
-		else if (strstr(cp, "empty") != nullptr)
-			S.empty();
-		else if (strstr(cp, "top") != nullptr)
-			S.top();
-		else
-			cout << "input error!" << endl;
+			continue;
 
-		//cmd 초기화
-		strcpy_s(cmd,20,"");
+		case 3:
+			S.show();
+			continue;
+
+		case 4:
+			cout << "종료합니다.\n";
+			break;
+
+		default:
+			cout << "1,2,3,4 중에서 선택\n";
+		}
+		break;
 	}
-	return 0;
 }
 
 /*push X: 정수 X를 스택에 넣는 연산이다.

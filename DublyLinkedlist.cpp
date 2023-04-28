@@ -1,59 +1,45 @@
-#include "Linked_list.h"
+#include "DS.h"
 
 //문제번호 3045번 이중 연결리스트
 //노드 추가
 
-int main(void) {
 
-	Node_list* head = NULL;
-	Node_list* tail = NULL;
-	Node_list* find = NULL;
+void linkedlist(void) {
+	int select = 0;
 
-	string cmd;
+	//클래스 생성
+	Linkedlist L;
+
 	while (1)
 	{
-		cin >> cmd; //명령 입력
+		cout << "삽입:1  검색:2  출력:3  종료:4\n";
 
-		if (cmd == "add")
-		{
-			tail = insertFront(tail);
-			if (head == NULL)
-				head = tail; //맨 앞과 맨 뒤를 연결
-		}
-		else if (cmd == "find")
-		{
-			find = find_Node(head);
-			if (find == NULL)
-				cout << "NONE" << "\n";
-			else
-				cout << find->data << "\n";
+		cin >> select;
 
-			find = NULL;
-		}
-		else if (cmd == "show")
-		{
-			cin >> cmd; // 뒤의 숫자 로드
-			if (cmd == "0")
-			{
-				traverse(tail);
-				cout << "\n";
-			}
-			else
-			{
-				traverse_reverse(head);
-				cout << "\n";
-			}
-		}
-		else if (cmd == "clear")
-			delete_All(tail);
-		else if (cmd == "exit")
+		switch (select) {
+
+		case 1:
+			L.insert();
+			continue;
+
+		case 2:
+			L.search();
+			continue;
+
+		case 3:
+			L.show();
+			continue;
+
+		case 4:
+			cout << "종료합니다.\n";
 			break;
-		else
-			cout << "wrong command" << "\n";
-		
-		//cmd = "";
+
+		default:
+			cout << "1,2,3,4 중에서 선택\n";
+		}
+		break;
 	}
-	return 0;
+
 }
 
 
